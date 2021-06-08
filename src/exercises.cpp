@@ -2702,6 +2702,10 @@
 //---------------------------------------------C++十大排序算法---------------------------------------
 #include<iostream>
 #include<algorithm>
+#include<unordered_map>
+#include<unordered_set>
+#include<map>
+#include<set>
 //1:选择排序(selection sort)时间复杂度最好、最坏都为O(n^2)，平均时间复杂度为O(n^2)，空间复杂度为O(1),不稳定
 template <class T>
 void selectionSort(T a[],int n)
@@ -3014,3 +3018,207 @@ void mergeSort(std::vector<int> &q, int l, int r)
     for(int i : w)
         q[l++] = i;
 }
+
+//-----------------------------------------------LeetCode算法题--------------------------------------
+//LeetCode的第一题
+//class Solution{
+//public:
+//    std::vector<int>twoSum(std::vector<int>& nums, int target)
+//    {
+//        std::unordered_map<int, int>hashtable;
+//        for(int i = 0; i < nums.size(); i++)
+//        {
+//            auto it = hashtable.find(target-nums[i]);
+//            if(it != hashtable.end())
+//            {
+//                return {it-> second, i};
+//            }
+//            hashtable[nums[i]] = i;
+//        }
+//        return {};
+//    }
+//};
+
+//LeetCode的第二题
+//struct ListNode{
+//    int val;
+//    ListNode *next;
+//    ListNode(int x):val(x),next(nullptr){}
+//};
+//
+//class Solution{
+//public:
+//    ListNode *addTwoNumbers(ListNode *l1, ListNode *l2)
+//    {
+//        ListNode *head = nullptr;
+//        ListNode *tail = nullptr;
+//        int carry = 0;
+//        while(l1 || l2)
+//        {
+//            int n1 = l1 ? l1->val : 0;
+//            int n2 = l2 ? l2->val : 0;
+//            int sum = n1 + n2 + carry;
+//            if(!head)
+//            {
+//                head = tail =new ListNode(sum % 10);
+//            }
+//            else
+//            {
+//                tail -> next = new ListNode(sum % 10);
+//                tail = tail -> next;
+//            }
+//            carry = sum / 10;
+//            if(l1)
+//            {
+//                l1 = l1->next;
+//            }
+//            if(l2)
+//            {
+//                l2 = l2->next;
+//            }
+//        }
+//        if(carry > 0)
+//        {
+//            tail->next = new ListNode(carry);
+//        }
+//        return head;
+//    }
+//};
+
+//LeetCode第三题
+//class Solution
+//{
+//public:
+//    int lengthOfLongestSubstring(std::string s)
+//    {
+//        std::unordered_set<char> occ;
+//        int n = occ.size();
+//        int rk = -1;
+//        int ans = 0;     //存放结果
+//        for (int i = 0; i < n; ++i) {
+//            if(i != 0){
+//                occ.erase(s[i-1]);
+//            }
+//            while(rk + 1 < n && !occ.count(s[rk + 1])){
+//                occ.insert(s[rk + 1]);
+//                ++rk;
+//            }
+//            ans = std::max(ans, rk - i + 1);
+//        }
+//        return ans;
+//    }
+//};
+
+//LeetCode第四题
+//class Solution {
+//public:
+//    int getKthElement(const std::vector<int>& nums1, const std::vector<int>& nums2, int k) {
+//        /* 主要思路：要找到第 k (k>1) 小的元素，那么就取 pivot1 = nums1[k/2-1] 和 pivot2 = nums2[k/2-1] 进行比较
+//         * 这里的 "/" 表示整除
+//         * nums1 中小于等于 pivot1 的元素有 nums1[0 .. k/2-2] 共计 k/2-1 个
+//         * nums2 中小于等于 pivot2 的元素有 nums2[0 .. k/2-2] 共计 k/2-1 个
+//         * 取 pivot = min(pivot1, pivot2)，两个数组中小于等于 pivot 的元素共计不会超过 (k/2-1) + (k/2-1) <= k-2 个
+//         * 这样 pivot 本身最大也只能是第 k-1 小的元素
+//         * 如果 pivot = pivot1，那么 nums1[0 .. k/2-1] 都不可能是第 k 小的元素。把这些元素全部 "删除"，剩下的作为新的 nums1 数组
+//         * 如果 pivot = pivot2，那么 nums2[0 .. k/2-1] 都不可能是第 k 小的元素。把这些元素全部 "删除"，剩下的作为新的 nums2 数组
+//         * 由于我们 "删除" 了一些元素（这些元素都比第 k 小的元素要小），因此需要修改 k 的值，减去删除的数的个数
+//         */
+//        int m = nums1.size();
+//        int n = nums2.size();
+//        int index1 = 0, index2 = 0;
+//
+//        while (true) {
+//            // 边界情况
+//            if (index1 == m) {
+//                return nums2[index2 + k - 1];
+//            }
+//            if (index2 == n) {
+//                return nums1[index1 + k - 1];
+//            }
+//            if (k == 1) {
+//                return std::min(nums1[index1], nums2[index2]);
+//            }
+//
+//            // 正常情况
+//            int newIndex1 = std::min(index1 + k / 2 - 1, m - 1);
+//            int newIndex2 = std::min(index2 + k / 2 - 1, n - 1);
+//            int pivot1 = nums1[newIndex1];
+//            int pivot2 = nums2[newIndex2];
+//            if (pivot1 <= pivot2) {
+//                k -= newIndex1 - index1 + 1;
+//                index1 = newIndex1 + 1;
+//            }
+//            else {
+//                k -= newIndex2 - index2 + 1;
+//                index2 = newIndex2 + 1;
+//            }
+//        }
+//    }
+//
+//    double findMedianSortedArrays(std::vector<int>& nums1, std::vector<int>& nums2) {
+//        int totalLength = nums1.size() + nums2.size();
+//        if (totalLength % 2 == 1) {
+//            return getKthElement(nums1, nums2, (totalLength + 1) / 2);
+//        }
+//        else {
+//            return (getKthElement(nums1, nums2, totalLength / 2) +
+//                    getKthElement(nums1, nums2, totalLength / 2 + 1)) / 2.0;
+//        }
+//    }
+//};
+
+//LeetCode第五题
+class Solution {
+public:
+    std::string longestPalindrome(std::string s)
+    {
+        int n = s.size();
+        //边界情况
+        if (n < 2) {
+            return s;
+        }
+
+        int maxLen = 1;
+        int begin = 0;
+        // dp[i][j] 表示 s[i..j] 是否是回文串
+        std::vector<std::vector<int>> dp(n, std::vector<int>(n));
+        // 初始化：所有长度为 1 的子串都是回文串，矩阵对角线
+        for (int i = 0; i < n; i++) {
+            dp[i][i] = true;
+        }
+        // 递推开始
+        // 先枚举子串长度
+        for (int L = 2; L <= n; L++)
+        {
+            // 枚举左边界，左边界的上限设置可以宽松一些
+            for (int i = 0; i < n; i++)
+            {
+                // 由 L 和 i 可以确定右边界，即 j - i + 1 = L 得
+                int j = L + i - 1;
+                // 如果右边界越界，就可以退出当前循环
+                if (j >= n) {
+                    break;
+                }
+
+                if (s[i] != s[j])
+                {
+                    dp[i][j] = false;
+                }
+                else{
+                    if (j - i < 3) {
+                        dp[i][j] = true;
+                    } else {
+                        dp[i][j] = dp[i + 1][j - 1];
+                    }
+                }
+
+                // 只要 dp[i][L] == true 成立，就表示子串 s[i..L] 是回文，此时记录回文长度和起始位置
+                if (dp[i][j] && j - i + 1 > maxLen) {
+                    maxLen = j - i + 1;
+                    begin = i;
+                }
+            }
+        }
+        return s.substr(begin, maxLen);
+    }
+};
